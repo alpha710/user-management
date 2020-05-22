@@ -1,11 +1,15 @@
 require('dotenv').config();
-const http = require('http');
+const https = require('https');
 const url = require('url');
+const fs = require('fs');
 
 const { signup } = require('./app/modules/signup/signup.controller');
 const { login } = require('./app/modules/login/login.controller');
 
-const server = http.createServer((req, res) => {
+const server = https.createServer({
+    key: fs.readFileSync('security/key.pem'),
+    cert: fs.readFileSync('security/cert.pem'),
+}, (req, res) => {
     const path = url.parse(req.url, true).pathname;
     req.body = '';
     req.on('data', (chunk) => {
